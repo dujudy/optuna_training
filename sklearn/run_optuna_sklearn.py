@@ -7,6 +7,7 @@ from load_data import *
 from plot_optuna_results import *
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score, precision_recall_curve, auc
+import argparse
 
 
 def score_model(parameters, train_feats, train_labs, test_feats, test_labs, metric):
