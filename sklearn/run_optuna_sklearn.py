@@ -3,7 +3,7 @@ Optuna optimization of hyperparameters
 """
 import optuna
 from load_data import *
-from sklearn_fns import *
+#from sklearn_fns import *
 from plot_optuna_results import *
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score, precision_recall_curve, auc
@@ -68,12 +68,12 @@ if __name__ == "__main__":
                         help="Full path to directory with labeled examples. ROC, PR, accuracy.")
     parser.add_argument("--feature_type", type=str, default= "ref",
                         help="Mapping of aa representation between mutant and reference. ref.")
-    parser.add_argument("--n_trials", type=int, default=200, help="Number of models for oputuna to train.")
+    parser.add_argument("--n", type=int, default=200, help="Number of models for oputuna to train.")
     parser.add_argument("--plot_suffix", type=str, default= "PRd1d2ref",
                         help="Name of study to annotate plots.")
     args = parser.parse_args()
 
-    optuna_run = main(args.feature_type, args.scoring_metric, n_trials = args.n_trials)
+    optuna_run = main(args.feature_type, args.scoring_metric, n_trials = args.n)
     plot_optuna_results(optuna_run, args.plot_suffix)
 
 
