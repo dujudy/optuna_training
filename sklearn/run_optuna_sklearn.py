@@ -1,6 +1,14 @@
+"""Optuna optimization of hyperparameters.
+
+Implements optuna optimization algorithms using sklearn ML algorithms (currently,
+GradientBoostingClassifier.) auROC, auPRC or accuracy between datasets can be
+used as the optimization objective. Returns an optuna study class.
+
+  Typical usage examples:
+    python3 run_optuna_sklearn.py
+    python3 run_optuna_sklearn.py --scoring_metric ROC
 """
-Optuna optimization of hyperparameters
-"""
+
 import optuna
 from load_data import *
 #from sklearn_fns import *
@@ -56,12 +64,11 @@ def fill_objective(train, test, type, feats, labs, scoring_metric):
     return objective(trial, train, test, type, feats, labs, scoring_metric)
   return filled_obj
 
-def main(feature_type = "ref", scoring_metric = "PR", n_trials = 200):
+def optimize_hyperparams(feature_type = "ref", scoring_metric = "PR", n_trials = 200):
     specified_objective = fill_objective("d1", "d2", feature_type, features, input_df, scoring_metric)
     study = optuna.create_study(direction="maximize")
     study.optimize(specified_objective, n_trials = n_trials)
     return(study)
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Optuna optimization of hyperparameters.")
@@ -74,10 +81,10 @@ if __name__ == "__main__":
                         help="Name of study to annotate plots.")
     args = parser.parse_args()
 
-    optuna_run = main(args.feature_type, args.scoring_metric, n_trials = args.n)
+    optuna_run = optimize_hyperparams(args.feature_type, args.scoring_metric, n_trials = args.n)
     plot_optuna_results(optuna_run, args.plot_suffix)
 
-
-
-# python3 run_optuna_sklearn.py
-# python3 run_optuna_sklearn.py --scoring_metric ROC
+    optuna_run.best_trial.params
+    classifier = GradientBoostingClassifier(**parameters)
+    # train model
+    classifier.fit(train_feats, train_labs)
