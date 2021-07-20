@@ -1,7 +1,7 @@
 # CONFIGuration file
 
 ## define training data folder
-root = "/Users/judyd/Desktop/UniRep/complete_datasets/"
+root = "../complete_datasets/"
 
 # set up exclude genes
 exclude = ["ENSP00000361021", "ENSP00000483066"] #PTEN
