@@ -7,7 +7,8 @@ def process_data(path, features_start, exclude):
  input_data = input_data[input_data["protein_id"].isin(exclude) == False]
  input_data['label'] = input_data["label"].replace("positives", 1).replace("negatives", 0)
  features = input_data.iloc[:,features_start:(len(input_data.columns))].to_numpy()
- labels = np.array([1 if lbl == 'positives' else 0 for lbl in input_data['label'].tolist()])
+ labels = input_data["label"]
+ #np.array([1 if lbl == 'positives' else 0 for lbl in input_data['label'].tolist()])
  return input_data, features, labels
 
 ## initialize data dicts
@@ -38,13 +39,16 @@ for key in ref_paths.keys():
     # create mutref
     mutref = input_df["ref"][key].copy().merge(input_df["mut"][key].copy(), on = metas, how = 'left', suffixes = ["", "_ref"]).dropna()
     features["mutref"][key] = mutref.iloc[:,start[key]:mutref.shape[1]].to_numpy()
-    labels["mutref"][key] = np.array([1 if lbl == 'positives' else 0 for lbl in mutref['label'].tolist()])
+    #labels["mutref"][key] = np.array([1 if lbl == 'positives' else 0 for lbl in mutref['label'].tolist()])
+    labels["mutref"][key] = mutref['label'].tolist()
     metadata["mutref"][key] = mutref.iloc[:,0:start[key]]
+    input_df["mutref"][key] = mutref
 
     # create abs
     features["abs"][key] = mutref.copy()[cols] - mutref.copy()[refcols].to_numpy()
     features["abs"][key] = features["abs"][key].abs().to_numpy()
-    labels["abs"][key] = np.array([1 if lbl == 'positives' else 0 for lbl in mutref['label'].tolist()])
+    #labels["abs"][key] = np.array([1 if lbl == 'positives' else 0 for lbl in mutref['label'].tolist()])
+    labels["abs"][key] = mutref['label'].tolist()
     metadata["abs"][key] = mutref.iloc[:,0:start[key]]
 
     # create absref
@@ -54,7 +58,8 @@ for key in ref_paths.keys():
     absref = abs.copy()
     absref = absref.iloc[:,0:dim].merge(input_df["ref"][key].copy(), on = metas, how = 'left', suffixes = ["", "_ref"]).dropna()
     features["absref"][key] = absref[cols + refcols].to_numpy()
-    labels["absref"][key] = np.array([1 if lbl == 'positives' else 0 for lbl in absref['label'].tolist()])
+    #labels["absref"][key] = np.array([1 if lbl == 'positives' else 0 for lbl in absref['label'].tolist()])
+    labels["absref"][key] = mutref['label'].tolist()
     metadata["absref"][key] = absref.iloc[:,0:start[key]]
 
     # create absmut
@@ -68,6 +73,7 @@ for key in ref_paths.keys():
 ### Combine split datasets (t or d)
 def combine_d(data_dict):
     return np.concatenate((data_dict["d1"], data_dict["d2"]), axis=0)
+
 for f in features.keys():
     features[f]["d"] = combine_d(features[f])
     labels[f]["d"] = combine_d(labels[f])
