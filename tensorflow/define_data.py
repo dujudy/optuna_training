@@ -2,8 +2,6 @@ import tensorflow as tf
 
 def tensor_data(feats, labs):
     def data_fn():
-        X = feats
-        y = labs
-        samples = tf.data.Dataset.from_tensor_slices((X.values, y))
+        samples = tf.data.Dataset.from_tensor_slices((feats.to_dict(orient='list'), labs)).batch(len(feats))
         return samples
     return data_fn

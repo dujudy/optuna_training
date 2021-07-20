@@ -1,1 +1,6 @@
+*config.py
 *.pyc
+*test.png
+__pycache__/*
+.DS_Store
+.ipynb_checkpoints/*
