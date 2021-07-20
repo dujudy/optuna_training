@@ -5,6 +5,7 @@ import numpy as np
 def process_data(path, features_start, exclude):
  input_data = pd.read_csv(path, header = 0, sep='\t', comment='#').dropna().reset_index(drop = True)
  input_data = input_data[input_data["protein_id"].isin(exclude) == False]
+ input_data['label'] = input_data["label"].replace("positives", 1).replace("negatives", 0)
  features = input_data.iloc[:,features_start:(len(input_data.columns))].to_numpy()
  labels = np.array([1 if lbl == 'positives' else 0 for lbl in input_data['label'].tolist()])
  return input_data, features, labels
