@@ -32,12 +32,14 @@ if __name__ == "__main__":
     parser.add_argument("--feature_type", type=str, default= "ref",
                         choices = ["ref", "mut"],
                         help="Mapping of aa representation between mutant and reference. ref.")
+    parser.add_argument("--model_name", type = str, default = "GB", choices = ["GB"],
+                        help="Name of Machine Learning algorithm.")
     args = parser.parse_args()
 
     for data_name in ref_paths:
         if data_name not in ["d1","d2", "d"]:
             print(data_name)
             model = load(args.model_path)
-            generate_prediction_probs(model, args.testing_pfix,
+            generate_prediction_probs(model, args.model_name,
                                       features[args.feature_type][data_name],
-                                      labels[args.feature_type][data_name], testing_pfix)
+                                      labels[args.feature_type][data_name], args.testing_pfix)
