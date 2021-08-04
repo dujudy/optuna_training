@@ -22,12 +22,12 @@ feature_columns["ref"] = cols
 for key in ref_paths.keys():
     print(key)
     # reading reference + mutant data
-    if key in ["ptenDMS", "mcf10A"]:
+    if key in ["ptenDMS", "mcf10A", "maveDB"]:
         input_df["ref"][key], features["ref"][key], labels["ref"][key] = process_data(root + ref_paths[key], start[key], [])
         input_df["mut"][key], features["mut"][key], labels["mut"][key] = process_data(root + mut_paths[key], start[key], [])
-    elif key in ["maveDB"]:
-        input_df["ref"][key], features["ref"][key], labels["ref"][key] = process_data(root + ref_paths[key], start[key], exclude_maveDB)
-        input_df["mut"][key], features["mut"][key], labels["mut"][key] = process_data(root + mut_paths[key], start[key], exclude_maveDB)
+    #elif key in ["maveDB"]:
+    #    input_df["ref"][key], features["ref"][key], labels["ref"][key] = process_data(root + ref_paths[key], start[key], exclude_maveDB)
+    #    input_df["mut"][key], features["mut"][key], labels["mut"][key] = process_data(root + mut_paths[key], start[key], exclude_maveDB)
     else:
         input_df["ref"][key], features["ref"][key], labels["ref"][key] = process_data(root + ref_paths[key], start[key], exclude)
         input_df["mut"][key], features["mut"][key], labels["mut"][key] = process_data(root + mut_paths[key], start[key], exclude)
