@@ -104,6 +104,8 @@ if __name__ == "__main__":
                         help="Prefix for filename: Optuna performance plots.")
     parser.add_argument("--modelname_prefix", type=str, default= "test",
                         help="Prefix for filename: hypertuned ML model.")
+    parser.add_argument("--testing_pfix", type=str, default= "test",
+                        help="Prefix for filename: prediction probabilities.")
     parser.add_argument("--testing", action  ='store_true',
                         help="Boolean. If true, run ipdb.")
     args = parser.parse_args()
@@ -121,7 +123,13 @@ if __name__ == "__main__":
         save = args.modelname_prefix)
 
     # optional testing
-    if args.testing:
-        pdb.set_trace(context = 7)
+    #if args.testing:
+    #    pdb.set_trace(context = 7)
 
+    for data_name in ref_paths:
+        if data_name not in ["d1","d2", "d"]:
+            print(data_name)
+            generate_prediction_probs(args.model_path, args.model_name,
+                                      features[args.feature_type]["d"],
+                                      labels[args.feature_type]["d"], data_name)
 #clf = load(args.modelname_prefix+ "_" + args.model_name + '_model.joblib')
