@@ -11,7 +11,7 @@ used as the optimization objective. Returns an optuna study class.
 
 import argparse
 from joblib import dump
-import ipdb
+import pdb
 import optuna
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score, precision_recall_curve, auc
@@ -122,6 +122,6 @@ if __name__ == "__main__":
 
     # optional testing
     if args.testing:
-        ipdb.set_trace(context = 7)
+        pdb.set_trace(context = 7)
 
 #clf = load(args.modelname_prefix+ "_" + args.model_name + '_model.joblib')
