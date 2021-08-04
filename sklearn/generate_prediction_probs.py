@@ -8,22 +8,19 @@ Returns the corresponding prediction probabilities.
 """
 # testing: generate prediction probabilities
 
-def generate_prediction_probs(model_path, model_name, X, y, testing_pfix):
-
-  model = load(model_path)
+def generate_prediction_probs(model, model_name, X, y, testing_pfix):
   probs = model.predict_proba(X)
 
   # compile pred_probs data to save
-  pp_dataframe = pd.DataFrame({"prediction_prob": probs[:,1], "label": y})
-  size = pp_dataframe.shape[0]
-  pp_dataframe = pd.concat([pd.DataFrame({"models":np.repeat(model_name, size)}),
-                            pp_dataframe], axis = 1)
+  pp_dataframe = pd.DataFrame({"prediction_prob": probs[:,1], "label": y,
+                               "models":np.repeat(model_name, probs.shape[0])})
 
   pp_dataframe.to_csv(path_or_buf = "./" + testing_pfix + "_PredictionProbs.csv")
   return(pp_dataframe)
 
 if __name__ == "__main__":
     import argparse
+    from joblib import load
     from sklearn.ensemble import GradientBoostingClassifier
     from load_data import *
 
@@ -32,11 +29,15 @@ if __name__ == "__main__":
                         help="Full path to directory to trained ML model.")
     parser.add_argument("--testing_pfix", type=str, default= "test",
                         help="Prefix for filename: prediction probabilities.")
+    parser.add_argument("--feature_type", type=str, default= "ref",
+                        choices = ["ref", "mut"],
+                        help="Mapping of aa representation between mutant and reference. ref.")
     args = parser.parse_args()
 
     for data_name in ref_paths:
         if data_name not in ["d1","d2", "d"]:
             print(data_name)
-            generate_prediction_probs(args.model_path, args.model_name,
-                                      features[args.feature_type]["d"],
-                                      labels[args.feature_type]["d"], testing_pfix)
+            model = load(args.model_path)
+            generate_prediction_probs(model, args.testing_pfix,
+                                      features[args.feature_type][data_name],
+                                      labels[args.feature_type][data_name], testing_pfix)
