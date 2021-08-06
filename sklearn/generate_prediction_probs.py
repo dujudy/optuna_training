@@ -4,7 +4,7 @@ Tests optuna-optimized algorithms on a given external dataset.
 Returns the corresponding prediction probabilities.
 
   Typical usage examples:
-    python3 generate_prediction_probs.py --model_path results/d_auROC_GB_model.joblib --testing_pfix results/d_auROC_GB_model
+    python3 generate_prediction_probs.py --model_path results/d_auROC_GB_model.joblib --testing_pfix results/d_auROC_GB_mmc
 """
 # testing: generate prediction probabilities
 
@@ -14,7 +14,7 @@ def generate_prediction_probs(model, model_name,X, y, metas, testing_pfix):
   # compile pred_probs data to save
   pp_dataframe = pd.DataFrame({"prediction_prob": probs[:,1], "label": y,
                                "models":np.repeat(model_name, probs.shape[0])})
-  pp_dataframe = pd.concat([metas[['protein_id', 'protein_position','reference_aa', 'mutant_aa', 'label']],pp_dataframe], axis = 1)  
+  pp_dataframe = pd.concat([metas[['protein_id', 'protein_position','reference_aa', 'mutant_aa']],pp_dataframe], axis = 1)  
   pp_dataframe.to_csv(path_or_buf = "./" + testing_pfix + "_PredictionProbs.csv")
   return(pp_dataframe)
 
