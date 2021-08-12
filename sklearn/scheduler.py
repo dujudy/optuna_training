@@ -16,7 +16,7 @@ module purge
 module load anaconda3
 conda activate optuna
 
-python3 ../run_optuna_sklearn.py --scoring_metric {metric} --plotname_prefix /tigress/jtdu/optuna_training/sklearn/results/{metric}d1d2{data_type} --modelname_prefix /tigress/jtdu/optuna_training/sklearn/results/d_{data_type}_au{metric}C >> opt_{metric}{data_type}.log
+python3 ../run_optuna_sklearn.py --model_name GB --scoring_metric {metric} --feature_type {data_type} --results_folder /tigress/jtdu/optuna_training/sklearn/results/ >> opt_{metric}{data_type}.log
 
 """.format(metric=metric, data_type)
 
@@ -28,6 +28,6 @@ def SubmitJob(metric, data_type,jobdir = os.getcwd()):
         os.system('cd {jobdir}; sbatch {sh_name}.sh &'.format(jobdir=jobdir,sh_name=sh_name))
 
 for d in ["mutref", "mut", "abs"]:
-    for m in ["PR", "ROC"]:
+    for m in ["auPRC", "auROC"]:
         SubmitJob(m, d)
         time.sleep(1)

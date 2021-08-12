@@ -32,7 +32,7 @@ def train_model(model_name, parameters, train_feats, train_labs, save = False):
     classifier.fit(train_feats, train_labs)
     # save model
     if save != False:
-        dump(classifier, save + "_" + model_name + '_model.joblib')
+        dump(classifier, save + '_model.joblib')
     return classifier
 
 def score_model(parameters, train_feats, train_labs, test_feats, test_labs, metric, model_name):
@@ -94,25 +94,28 @@ if __name__ == "__main__":
     parser.add_argument("--model_name", type = str, default = "GB", choices = ["GB"],
                         help="Name of Machine Learning algorithm.")
     parser.add_argument("--scoring_metric", type=str, default= "PR",
-                        choices = ["PR", "ROC", "accuracy"],
+                        choices = ["auPRC", "auROC", "accuracy"],
                         help="Full path to directory with labeled examples. ROC, PR, accuracy.")
     parser.add_argument("--feature_type", type=str, default= "ref",
-                        choices = ["ref", "mut"],
+                        choices = ["ref", "mut", "abs", "mutref"],
                         help="Mapping of aa representation between mutant and reference. ref.")
     parser.add_argument("--n", type=int, default=200, help="Number of models for oputuna to train.")
-    parser.add_argument("--plotname_prefix", type=str, default= "test",
-                        help="Prefix for filename: Optuna performance plots.")
-    parser.add_argument("--modelname_prefix", type=str, default= "test",
-                        help="Prefix for filename: hypertuned ML model.")
-    parser.add_argument("--testing_pfix", type=str, default= "test",
-                        help="Prefix for filename: prediction probabilities.")
-    parser.add_argument("--testing", action  ='store_true',
-                        help="Boolean. If true, run ipdb.")
+    parser.add_argument("--results_folder", type=str, default = "results/",
+                        help="Write path to folder of results.")
+    #parser.add_argument("--plotname_prefix", type=str, default= "default",
+    #                    help="Prefix for filename: Optuna performance plots.")
+    #parser.add_argument("--modelname_prefix", type=str, default= "test",
+    #                    help="Prefix for filename: hypertuned ML model.")
+    #parser.add_argument("--testing_pfix", type=str, default= "test",
+    #                    help="Prefix for filename: prediction probabilities.")
+    parser.add_argument("--run_pdb", action  ='store_true',
+                        help="Boolean. If true, run pdb.")
     args = parser.parse_args()
 
+    run_id = args.results_folder + "{write_type}" + args.feature_type + "_" + args.model_name + args.scoring_metric
     # optimize hyperparameters with optuna
     optuna_run = optimize_hyperparams(args.feature_type, args.scoring_metric, args.n, args.model_name)
-    plot_optuna_results(optuna_run, args.plotname_prefix)
+    plot_optuna_results(optuna_run, run_id.format(write_type="optuna_d1d2"))
 
     # train final model using optuna's best hyperparameters
     final_classifier = train_model(
@@ -120,16 +123,19 @@ if __name__ == "__main__":
         optuna_run.best_trial.params,
         features[args.feature_type]["d"],
         labels[args.feature_type]["d"],
-        save = args.modelname_prefix)
+        save = run_id.format(write_type="d_"))
 
     # optional testing
-    #if args.testing:
-    #    pdb.set_trace(context = 7)
+    if args.run_pdb:
+        pdb.set_trace(context = 7)
 
     for data_name in ref_paths:
         if data_name not in ["d1","d2", "d"]:
             print(data_name)
-            generate_prediction_probs(args.model_path, args.model_name,
+            generate_prediction_probs(final_classifier,
+                                      args.model_name + "_opt" + args.scoring_metric,
                                       features[args.feature_type]["d"],
-                                      labels[args.feature_type]["d"], data_name)
-#clf = load(args.modelname_prefix+ "_" + args.model_name + '_model.joblib')
+                                      labels[args.feature_type]["d"],
+                                      metadata[args.feature_type]["d"],
+                                      run_id.format(write_type=data_name + "_d")
+                                      )
