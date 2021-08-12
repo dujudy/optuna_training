@@ -140,4 +140,7 @@ if __name__ == "__main__":
                                       metadata[args.feature_type]["d"],
                                       run_id.format(write_type=data_name + "_d")
                                       )
+<<<<<<< HEAD
 
+=======
+>>>>>>> e62f489f48e600dbe820cc46e331540acd914960

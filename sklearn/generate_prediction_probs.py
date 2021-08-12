@@ -14,8 +14,8 @@ def generate_prediction_probs(model, model_name,X, y, metas, testing_pfix):
   # compile pred_probs data to save
   pp_dataframe = pd.DataFrame({"prediction_prob": probs[:,1], "label": y,
                                "models":np.repeat(model_name, probs.shape[0])})
-  pp_dataframe = pd.concat([metas[['protein_id', 'protein_position','reference_aa', 'mutant_aa']],pp_dataframe], axis = 1)  
-  pp_dataframe.to_csv(path_or_buf = "./" + testing_pfix + "_PredictionProbs.csv")
+  pp_dataframe = pd.concat([metas[['protein_id', 'protein_position','reference_aa', 'mutant_aa']],pp_dataframe], axis = 1)
+  pp_dataframe.to_csv(path_or_buf = testing_pfix + "_PredictionProbs.csv")
   return(pp_dataframe)
 
 if __name__ == "__main__":
