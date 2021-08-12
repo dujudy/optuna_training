@@ -17,7 +17,8 @@ ref_paths = {
 #"t2":"t2_pooledTCGA_new_reference.tsv",
 #"mcf10A":"mmc2_new_reference.tsv",
 #"ptenDMS":"PTEN_DMS_phosph_reference.tsv",
-#"maveDB": "maveDB_reference.tsv"
+"mcf10A": "mmc2_new_reference_missenseOnly.tsv",
+"maveDB": "mavedb_offset_reference.tsv"
 }
 
 ## define paths to UniRep Vectors of mutant sequences
@@ -26,14 +27,15 @@ mut_paths = {
  "d2":'d2_primateNegativesDocmPositives_mutant.tsv',
  #"t1":"t1_pooledTCGA_new_mutant.tsv",
  #"t2":'t2_pooledTCGA_mutant_new.tsv',
- "mcf10A":'mmc2_new_mutant.tsv',
+ #"mcf10A":'mmc2_new_mutant.tsv',
+ "mcf10A": "mmc2_new_mutant_missenseOnly.tsv",
  "ptenDMS":"PTEN_DMS_phosph_mutant.tsv",
- "maveDB": "maveDB_mutant.tsv"
+ "maveDB": "mavedb_offset_mutant.tsv"
 }
 
 ## define indices for start of data/end of metadata
 # data must separate data (on right) from metadata (left)
-start = {"d1":5, "d2":5, "t1":8, "t2":8, "mcf10A":13, "ptenDMS":10, "maveDB":7 }
+start = {"d1":5, "d2":5, "t1":8, "t2":8, "mcf10A":13, "ptenDMS":10, "maveDB":11 }
 
 ## specify column names
 cols = ["UR_" + str(i) for i in range(0,1900)]
