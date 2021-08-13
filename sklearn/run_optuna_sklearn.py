@@ -46,10 +46,10 @@ def score_model(parameters, train_feats, train_labs, test_feats, test_labs, metr
     # generating prediction probs for test set
     y_score = classifier.predict_proba(test_feats)[:,1]
     # generate scoring metric
-    if metric == "ROC":
+    if metric == "auROC":
         # calculate ROC AUC
         metric = roc_auc_score(test_labs, y_score)
-    elif metric == "PR":
+    elif metric == "auPRC":
         # calculate auprc
         precision, recall, thresholds = precision_recall_curve(test_labs, y_score)
         metric = auc(recall, precision)
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Optuna optimization of hyperparameters.")
     parser.add_argument("--model_name", type = str, default = "GB", choices = ["GB"],
                         help="Name of Machine Learning algorithm.")
-    parser.add_argument("--scoring_metric", type=str, default= "PR",
+    parser.add_argument("--scoring_metric", type=str, default= "auPRc",
                         choices = ["auPRC", "auROC", "accuracy"],
                         help="Full path to directory with labeled examples. ROC, PR, accuracy.")
     parser.add_argument("--feature_type", type=str, default= "ref",
