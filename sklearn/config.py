@@ -18,7 +18,7 @@ ref_paths = {
 #"mcf10A":"mmc2_new_reference.tsv",
 #"ptenDMS":"PTEN_DMS_phosph_reference.tsv",
 "mcf10A": "mmc2_new_reference_missenseOnly.tsv",
-"maveDB": "mavedb_offset_reference.tsv"
+#"maveDB": "mavedb_offset_reference.tsv"
 }
 
 ## define paths to UniRep Vectors of mutant sequences
