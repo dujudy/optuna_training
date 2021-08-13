@@ -13,6 +13,7 @@ import argparse
 from joblib import dump
 import pdb
 import optuna
+import pandas as pd
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score, precision_recall_curve, auc
 from generate_prediction_probs import *
@@ -46,10 +47,10 @@ def score_model(parameters, train_feats, train_labs, test_feats, test_labs, metr
     # generating prediction probs for test set
     y_score = classifier.predict_proba(test_feats)[:,1]
     # generate scoring metric
-    if metric == "ROC":
+    if metric == "auROC":
         # calculate ROC AUC
         metric = roc_auc_score(test_labs, y_score)
-    elif metric == "PR":
+    elif metric == "auPRC":
         # calculate auprc
         precision, recall, thresholds = precision_recall_curve(test_labs, y_score)
         metric = auc(recall, precision)
@@ -128,7 +129,7 @@ if __name__ == "__main__":
 
     # optional testing
     if args.run_pdb:
-        pdb.set_trace(context = 7)
+        pdb.set_trace()
 
     for data_name in ref_paths:
         if data_name not in ["d1","d2", "d"]:
@@ -139,8 +140,4 @@ if __name__ == "__main__":
                                       labels[args.feature_type]["d"],
                                       metadata[args.feature_type]["d"],
                                       run_id.format(write_type=data_name + "_d")
-                                      )
-<<<<<<< HEAD
-
-=======
->>>>>>> e62f489f48e600dbe820cc46e331540acd914960
+                                     )

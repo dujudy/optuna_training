@@ -77,7 +77,7 @@ def combine_d(data_dict):
 for f in features.keys():
     features[f]["d"] = combine_d(features[f])
     labels[f]["d"] = combine_d(labels[f])
-    metadata[f]["d"] = metadata[f]["d1"].append(metadata[f]["d2"])
+    metadata[f]["d"] = metadata[f]["d1"].append(metadata[f]["d2"]).reset_index(drop = True)
 
 def load_data(dataset, tranformation):
     return input_df[tranformation][dataset]

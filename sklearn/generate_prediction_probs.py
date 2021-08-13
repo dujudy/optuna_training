@@ -7,6 +7,9 @@ Returns the corresponding prediction probabilities.
     python3 generate_prediction_probs.py --model_path results/d_auROC_GB_model.joblib --testing_pfix results/d_auROC_GB_mmc
 """
 # testing: generate prediction probabilities
+from sklearn.ensemble import GradientBoostingClassifier
+import pandas as pd
+import numpy as np 
 
 def generate_prediction_probs(model, model_name,X, y, metas, testing_pfix):
   probs = model.predict_proba(X)
