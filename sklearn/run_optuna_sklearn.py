@@ -8,16 +8,13 @@ used as the optimization objective. Returns an optuna study class.
     python3 run_optuna_sklearn.py
     python3 run_optuna_sklearn.py --scoring_metric ROC
 """
-
 import argparse
 from joblib import dump
-import pdb
 import optuna
 import pandas as pd
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score, precision_recall_curve, auc
 from generate_prediction_probs import *
-#from sklearn_fns import *
 from load_data import *
 from plot_optuna_results import *
 
@@ -95,29 +92,31 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Optuna optimization of hyperparameters.")
     parser.add_argument("--model_name", type = str, default = "GB", choices = ["GB"],
                         help="Name of Machine Learning algorithm.")
-    parser.add_argument("--scoring_metric", type=str, default= "PR",
+    parser.add_argument("--scoring_metric", type=str, default= "auPRc",
                         choices = ["auPRC", "auROC", "accuracy"],
                         help="Full path to directory with labeled examples. ROC, PR, accuracy.")
     parser.add_argument("--feature_type", type=str, default= "ref",
                         choices = ["ref", "mut", "abs", "mutref"],
-                        help="Mapping of aa representation between mutant and reference. ref.")
+                        help="Mapping of aa representation between mutant and reference.")
     parser.add_argument("--n", type=int, default=200, help="Number of models for oputuna to train.")
     parser.add_argument("--results_folder", type=str, default = "results/",
                         help="Write path to folder of results.")
-    #parser.add_argument("--plotname_prefix", type=str, default= "default",
-    #                    help="Prefix for filename: Optuna performance plots.")
-    #parser.add_argument("--modelname_prefix", type=str, default= "test",
-    #                    help="Prefix for filename: hypertuned ML model.")
-    #parser.add_argument("--testing_pfix", type=str, default= "test",
-    #                    help="Prefix for filename: prediction probabilities.")
-    parser.add_argument("--run_pdb", action  ='store_true',
-                        help="Boolean. If true, run pdb.")
+    parser.add_argument("--lang_model_type", type=str, default = "UniRep", choices = ["UniRep", "Rostlab_Bert"],
+                        help="Type of language model underlying features. Default: config paths left as is.")
     args = parser.parse_args()
 
-    run_id = args.results_folder + "{write_type}" + args.feature_type + "_" + args.model_name + args.scoring_metric
+    # load data
+    if args.lang_model_type == "UniRep":
+        from config import *
+    elif args.lang_model_type == "Rostlab_Bert":
+        from config_RostlabBert import *
+    features, labels, input_df, metadata, feature_columns = load_data(ref_paths, mut_paths, start, cols, refcols, mutcols, metas)
+
     # optimize hyperparameters with optuna
+
+    run_id = args.results_folder + "{write_type}" + args.lang_model_type + args.feature_type + "_" + args.model_name + args.scoring_metric
     optuna_run = optimize_hyperparams(args.feature_type, args.scoring_metric, args.n, args.model_name)
-    plot_optuna_results(optuna_run, run_id.format(write_type="optuna_d1d2"))
+    plot_optuna_results(optuna_run, run_id.format(write_type="optuna_d1d2_"))
 
     # train final model using optuna's best hyperparameters
     final_classifier = train_model(
@@ -127,10 +126,6 @@ if __name__ == "__main__":
         labels[args.feature_type]["d"],
         save = run_id.format(write_type="d_"))
 
-    # optional testing
-    if args.run_pdb:
-        pdb.set_trace()
-
     for data_name in ref_paths:
         if data_name not in ["d1","d2", "d"]:
             print(data_name)
@@ -139,5 +134,5 @@ if __name__ == "__main__":
                                       features[args.feature_type]["d"],
                                       labels[args.feature_type]["d"],
                                       metadata[args.feature_type]["d"],
-                                      run_id.format(write_type=data_name + "_d")
+                                      run_id.format(write_type=data_name + "_d_")
                                      )
