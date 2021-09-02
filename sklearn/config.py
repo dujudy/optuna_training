@@ -1,7 +1,8 @@
 # CONFIGuration file
 
 ## define training data folder
-root = "/tigress/jtdu/optuna_training/complete_datasets/"
+#root = "/tigress/jtdu/optuna_training/complete_datasets/"
+root = "/tigress/jtdu/map_language_models/user_files/"
 
 # set up exclude genes
 exclude = ["ENSP00000361021", "ENSP00000483066"] #PTEN
@@ -11,8 +12,8 @@ exclude_maveDB = ["ENSP00000312236", "ENSP00000350283", "ENSP00000418960", "ENSP
 ## define paths to UniRep Vectors of reference sequences
  # data must include the columns protein_id, protein_position, reference_aa, mutant_aa, and label
 ref_paths = {
-"d1":"d1_primateNegativesDocmPositives_reference.tsv",
-"d2":"d2_primateNegativesDocmPositives_reference.tsv",
+"d1": "d1_primateNegativesDocmPositives_key_reference_reference.tsv", #"d1_primateNegativesDocmPositives_reference.tsv",
+"d2": "d2_primateNegativesDocmPositives_key_reference_reference.tsv", #"d2_primateNegativesDocmPositives_reference.tsv",
 #"t1":"t1_pooledTCGA_new_reference.tsv",
 #"t2":"t2_pooledTCGA_new_reference.tsv",
 #"mcf10A":"mmc2_new_reference.tsv",
@@ -23,8 +24,10 @@ ref_paths = {
 
 ## define paths to UniRep Vectors of mutant sequences
 mut_paths = {
-"d1":'d1_primateNegativesDocmPositives_mutant.tsv',
- "d2":'d2_primateNegativesDocmPositives_mutant.tsv',
+"d1":'d1_primateNegativesDocmPositives_key_mutant.tsv',
+#"d1":'d1_primateNegativesDocmPositives_mutant.tsv',
+ "d2":'d2_primateNegativesDocmPositives__keymutant.tsv',
+#"d2":'d2_primateNegativesDocmPositives_mutant.tsv',
  #"t1":"t1_pooledTCGA_new_mutant.tsv",
  #"t2":'t2_pooledTCGA_mutant_new.tsv',
  #"mcf10A":'mmc2_new_mutant.tsv',
