@@ -1,4 +1,3 @@
-from config import * / from config_RostlabBert import *
 import pandas as pd
 import numpy as np
 
