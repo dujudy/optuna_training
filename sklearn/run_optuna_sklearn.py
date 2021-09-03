@@ -110,7 +110,8 @@ if __name__ == "__main__":
         from config import *
     elif args.lang_model_type == "Rostlab_Bert":
         from config_RostlabBert import *
-    features, labels, input_df, metadata, feature_columns = load_data(ref_paths, mut_paths, start, cols, refcols, mutcols, metas)
+    features, labels, input_df, metadata, feature_columns = load_data(ref_paths, mut_paths, start, cols, exclude)
+    load_data(ref_paths, mut_paths, start, cols, refcols, mutcols, metas)
 
     # optimize hyperparameters with optuna
 

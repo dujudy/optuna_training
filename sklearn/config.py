@@ -27,7 +27,7 @@ mut_paths = {
 
 ## define indices for start of data/end of metadata
 # data must separate data (on right) from metadata (left)
-start = {"d1":5, "d2":5, "t1":8, "t2":8, "mcf10A":13, "ptenDMS":10, "maveDB":11 } fix
+start = {"d1":5, "d2":5, "t1":8, "t2":8, "mcf10A":13, "ptenDMS":10, "maveDB":11 } 
 
 ## specify column names
-cols = ["UR_" + str(i) for i in range(0,1900)] fix check
+cols = ["UR_" + str(i) for i in range(0,1900)]

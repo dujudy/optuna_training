@@ -1,4 +1,3 @@
-from config import * / from config_RostlabBert import *
 import pandas as pd
 import numpy as np
 
@@ -61,5 +60,4 @@ def load_data(ref_paths, mut_paths, start, cols, exclude):
         features[f]["d"] = combine_d(features[f])
         labels[f]["d"] = combine_d(labels[f])
         metadata[f]["d"] = metadata[f]["d1"].append(metadata[f]["d2"]).reset_index(drop = True)
-
     return features, labels, input_df, metadata, feature_columns
