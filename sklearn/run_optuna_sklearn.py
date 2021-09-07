@@ -134,7 +134,7 @@ if __name__ == "__main__":
 
     for data_name in ref_paths:
         if data_name not in ["d1","d2", "d"]:
-            print(data_name)
+            print(data_name); print(model_path);
             generate_prediction_probs(final_classifier,
                                       args.model_name + "_opt" + args.scoring_metric,
                                       features[args.feature_type][data_name],

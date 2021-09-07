@@ -12,21 +12,21 @@ exclude = {"d1": [], "d2": [],
 ref_paths = {
 "d1": root + "d1_primateNegativesDocmPositives_key_Rostlab_Bert_reference.tsv",
 "d2": root + "d2_primateNegativesDocmPositives_key_Rostlab_Bert_reference.tsv",
-"mcf10A": root + "mmc2_newlabs_key_Rostlab_Bert_reference.tsv",
-#"maveDB": "/scratch/gpfs/jtdu/mavedb_offset_key_Rostlab_Bert_reference.tsv"
+#"mcf10A": root + "mmc2_newlabs_key_Rostlab_Bert_reference.tsv",
+"maveDB": "/scratch/gpfs/jtdu/mavedb_offset_key_Rostlab_Bert_reference.tsv"
 }
 
 ## define paths to UniRep Vectors of mutant sequences
 mut_paths = {
 "d1": root + 'd1_primateNegativesDocmPositives_key_Rostlab_Bert_mutant.tsv',
  "d2": root + 'd2_primateNegativesDocmPositives_key_Rostlab_Bert_mutant.tsv',
- "mcf10A": root + "mmc2_newlabs_key_Rostlab_Bert_mutant.tsv"
- #"maveDB": "/scratch/gpfs/jtdu/mavedb_offset_key_Rostlab_Bert_mutant.tsv"
+# "mcf10A": root + "mmc2_newlabs_key_Rostlab_Bert_mutant.tsv"
+ "maveDB": "/scratch/gpfs/jtdu/mavedb_offset_key_Rostlab_Bert_mutant.tsv"
 }
 
 ## define indices for start of data/end of metadata
 # data must separate data (on right) from metadata (left)
-start = {"d1":5, "d2":5, "t1":8, "t2":8, "mcf10A":14, "ptenDMS":10, "maveDB":11}
+start = {"d1":5, "d2":5, "t1":8, "t2":8, "mcf10A":14, "ptenDMS":10, "maveDB":12}
 
 ## specify column names
 cols = ["Rost_" + str(i) for i in range(0,1024)] 
