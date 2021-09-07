@@ -16,7 +16,7 @@ module purge
 module load anaconda3
 conda activate optuna
 
-python3 run_optuna_sklearn.py --model_name GB --lang_model_type {lang_type} --scoring_metric {metric} --feature_type {data_type} --results_folder /tigress/jtdu/optuna_training/sklearn/results/{lang_type} >> /tigress/jtdu/optuna_training/sklearn/sh/opt_{metric}{data_type}{lang_type}.log
+python3 run_optuna_sklearn.py --model_name GB --lang_model_type {lang_type} --scoring_metric {metric} --feature_type {data_type} --results_folder /tigress/jtdu/optuna_training/sklearn/results/{lang_type}/ >> /tigress/jtdu/optuna_training/sklearn/sh/opt_{metric}{data_type}{lang_type}.log
 
 """.format(metric=metric, data_type=data_type, lang_type=lang_type)
 
@@ -27,10 +27,11 @@ def SubmitJob(lang_type, metric, data_type,jobdir = os.getcwd()):
         f.write(js)
         os.system('cd {jobdir}; sbatch {sh_name} &'.format(jobdir=jobdir,sh_name=sh_name))
 
-for l in ["Rostlab_Bert", "UniRep"]:
+for l in ["Rostlab_Bert"]: #, "UniRep"]:
     for d in ["mutref", "mut", "abs", "ref"]:
         for m in ["auPRC", "auROC"]:
             SubmitJob(l, m, d)
             time.sleep(1)
 
-python3 run_optuna_sklearn.py --model_name GB --lang_model_type Rostlab_Bert --scoring_metric auPRC --feature_type abs --results_folder /tigress/jtdu/optuna_training/sklearn/results/Rostlab_Bert
+#python3 run_optuna_sklearn.py --model_name GB --lang_model_type Rostlab_Bert --scoring_metric auPRC --feature_type abs --results_folder /tigress/jtdu/optuna_training/sklearn/results/Rostlab_Bert
+

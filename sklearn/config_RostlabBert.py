@@ -29,5 +29,5 @@ mut_paths = {
 start = {"d1":5, "d2":5, "t1":8, "t2":8, "mcf10A":14, "ptenDMS":10, "maveDB":11}
 
 ## specify column names
-cols = [str(i) for i in range(0,1024)] 
+cols = ["Rost_" + str(i) for i in range(0,1024)] 
 metas = ['protein_id', 'protein_position', 'reference_aa', 'mutant_aa', 'label']
