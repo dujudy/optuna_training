@@ -9,7 +9,7 @@ used as the optimization objective. Returns an optuna study class.
     python3 run_optuna_sklearn.py --scoring_metric ROC
 """
 import argparse
-from joblib import dump
+from joblib import dump, load
 import optuna
 import pandas as pd
 from sklearn.ensemble import GradientBoostingClassifier
@@ -17,6 +17,7 @@ from sklearn.metrics import roc_auc_score, precision_recall_curve, auc
 from generate_prediction_probs import *
 from load_data import *
 from plot_optuna_results import *
+from os.path import exists
 
 def define_model(model_name, params):
     if model_name =="GB":
@@ -100,7 +101,7 @@ if __name__ == "__main__":
                         help="Mapping of aa representation between mutant and reference.")
     parser.add_argument("--n", type=int, default=200, help="Number of models for oputuna to train.")
     parser.add_argument("--results_folder", type=str, default = "results/",
-                        help="Write path to folder of results.")
+                        help="Write path to folder of results. Must end in '/'")
     parser.add_argument("--lang_model_type", type=str, default = "UniRep", choices = ["UniRep", "Rostlab_Bert"],
                         help="Type of language model underlying features. Default: config paths left as is.")
     args = parser.parse_args()
@@ -112,27 +113,32 @@ if __name__ == "__main__":
         from config_RostlabBert import *
     features, labels, input_df, metadata, feature_columns = load_data(ref_paths, mut_paths, start, cols, exclude)
 
-    # optimize hyperparameters with optuna
-
+    # check if optuna-trained model already exists
     run_id = args.results_folder + "{write_type}" + args.lang_model_type + args.feature_type + "_" + args.model_name + args.scoring_metric
-    optuna_run = optimize_hyperparams(args.feature_type, args.scoring_metric, args.n, args.model_name)
-    plot_optuna_results(optuna_run, run_id.format(write_type="optuna_d1d2_"))
+    model_path = run_id.format(write_type="d_") + '_model.joblib'
+    if exists(model_path):
+        # load model
+        final_classifier = load(model_path)
+    else:
+        # optimize hyperparameters with optuna
+        optuna_run = optimize_hyperparams(args.feature_type, args.scoring_metric, args.n, args.model_name)
+        plot_optuna_results(optuna_run, run_id.format(write_type="optuna_d1d2_"))
 
-    # train final model using optuna's best hyperparameters
-    final_classifier = train_model(
-        args.model_name,
-        optuna_run.best_trial.params,
-        features[args.feature_type]["d"],
-        labels[args.feature_type]["d"],
-        save = run_id.format(write_type="d_"))
+        # train final model using optuna's best hyperparameters
+        final_classifier = train_model(
+            args.model_name,
+            optuna_run.best_trial.params,
+            features[args.feature_type]["d"],
+            labels[args.feature_type]["d"],
+            save = run_id.format(write_type="d_"))
 
     for data_name in ref_paths:
         if data_name not in ["d1","d2", "d"]:
             print(data_name)
             generate_prediction_probs(final_classifier,
                                       args.model_name + "_opt" + args.scoring_metric,
-                                      features[args.feature_type]["d"],
-                                      labels[args.feature_type]["d"],
-                                      metadata[args.feature_type]["d"],
+                                      features[args.feature_type][data_name],
+                                      labels[args.feature_type][data_name],
+                                      metadata[args.feature_type][data_name],
                                       run_id.format(write_type=data_name + "_d_")
                                      )
