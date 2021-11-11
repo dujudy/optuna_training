@@ -12,12 +12,18 @@ import argparse
 from joblib import dump, load
 import optuna
 import pandas as pd
+import faiss
+import pickle
+
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score, precision_recall_curve, auc
+from os.path import exists
+
 from generate_prediction_probs import *
 from load_data import *
 from plot_optuna_results import *
-from os.path import exists
+
+
 
 def define_model(model_name, params):
     if model_name =="GB":
@@ -104,16 +110,27 @@ if __name__ == "__main__":
                         help="Write path to folder of results. Must end in '/'")
     parser.add_argument("--lang_model_type", type=str, default = "UniRep", choices = ["UniRep", "Rostlab_Bert"],
                         help="Type of language model underlying features. Default: config paths left as is.")
+    parser.add_argument("--pca_key", type = str, default = "None", help="PCA matrix specified by key in pca_mats. See config file for further specifications.")
+
     args = parser.parse_args()
 
-    # load data
+    # Load data
     if args.lang_model_type == "UniRep":
         from config import *
     elif args.lang_model_type == "Rostlab_Bert":
         from config_RostlabBert import *
     features, labels, input_df, metadata, feature_columns = load_data(ref_paths, mut_paths, start, cols, exclude)
 
-    # check if optuna-trained model already exists
+    # Apply PCA if applicable
+    if args.pca_key not "None":
+        pca = pickle.load(pca_mats[args.pca_key])
+        newfeat = args.feature_type + "_" + args.pca_key; features[newfeat] = {}
+        for data_name in features[args.feature_type].keys():
+            features[newfeat][data_name] = pca.apply_py(features[args.feature_type][data_name].astype('float32'))
+            del data_name
+        args.feature_type = newfeat
+
+    # Check if optuna-trained model already exists
     run_id = args.results_folder + "{write_type}" + args.lang_model_type + args.feature_type + "_" + args.model_name + args.scoring_metric
     model_path = run_id.format(write_type="d_") + '_model.joblib'
     if exists(model_path):
