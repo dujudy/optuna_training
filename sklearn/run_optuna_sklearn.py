@@ -18,6 +18,7 @@ from generate_prediction_probs import *
 from load_data import *
 from plot_optuna_results import *
 from os.path import exists
+from os import system
 
 def define_model(model_name, params):
     if model_name =="GB":
@@ -114,13 +115,15 @@ if __name__ == "__main__":
     features, labels, input_df, metadata, feature_columns = load_data(ref_paths, mut_paths, start, cols, exclude)
 
     # check if optuna-trained model already exists
-    run_id = args.results_folder + "{write_type}" + args.lang_model_type + args.feature_type + "_" + args.model_name + args.scoring_metric
+    run_id = args.results_folder + "/" + "{write_type}" + args.lang_model_type + args.feature_type + "_" + args.model_name + args.scoring_metric
     model_path = run_id.format(write_type="d_") + '_model.joblib'
     if exists(model_path):
         # load model
+        print("Loading model at: " + model_path)
         final_classifier = load(model_path)
     else:
         # optimize hyperparameters with optuna
+        print("Running optuna optimization.")
         optuna_run = optimize_hyperparams(args.feature_type, args.scoring_metric, args.n, args.model_name)
         plot_optuna_results(optuna_run, run_id.format(write_type="optuna_d1d2_"))
 
@@ -130,8 +133,10 @@ if __name__ == "__main__":
             optuna_run.best_trial.params,
             features[args.feature_type]["d"],
             labels[args.feature_type]["d"],
-            save = run_id.format(write_type="d_"))
+            save = model_path)
+#            save = run_id.format(write_type = "d_"))
 
+    # generate prediction probabilities
     for data_name in ref_paths:
         if data_name not in ["d1","d2", "d"]:
             print(data_name); print(model_path);
@@ -142,3 +147,9 @@ if __name__ == "__main__":
                                       metadata[args.feature_type][data_name],
                                       run_id.format(write_type=data_name + "_d_")
                                      )
+
+    # generate performance plots
+    plot_script = "test_ml_models/plot_analyses/"
+    for f in ["plot_mcf10A_optuna_comparisons.R", "plot_mavedb_optuna_comparisons.R"]:
+        print(f)
+        system(plot_script + f)

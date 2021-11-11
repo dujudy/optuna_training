@@ -2,19 +2,18 @@ import pandas as pd
 import numpy as np
 
 def process_data(path, features_start, exclude):
- input_data = pd.read_csv(path, header = 0, sep='\t', comment='#').dropna().reset_index(drop = True)
- input_data = input_data[input_data["protein_id"].isin(exclude) == False]
- input_data['label'] = input_data["label"].replace("positives", 1).replace("negatives", 0)
- features = input_data.iloc[:,features_start:(len(input_data.columns))].to_numpy()
- labels = input_data["label"]
- return input_data, features, labels
+    print("Loading " + path)
+    input_data = pd.read_csv(path, header = 0, sep='\t', comment='#').dropna()
+    input_data = input_data[input_data["protein_id"].isin(exclude) == False]
+    input_data = input_data[input_data["reference_aa"] != input_data["mutant_aa"]].reset_index(drop = True)
+    input_data['label'] = input_data["label"].replace("positives", 1).replace("negatives", 0)
+    features = input_data.iloc[:,features_start:(len(input_data.columns))].to_numpy()
+    labels = input_data["label"]
+    return input_data, features, labels
 
 ### Combine split datasets (t or d)
 def combine_d(data_dict):
     return np.concatenate((data_dict["d1"], data_dict["d2"]), axis=0)
-
-def load_data(dataset, tranformation):
-    return input_df[tranformation][dataset]
 
 def load_data(ref_paths, mut_paths, start, cols, exclude):
     ## initialize data dicts

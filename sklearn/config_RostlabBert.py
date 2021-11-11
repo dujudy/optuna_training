@@ -1,7 +1,8 @@
 # CONFIGuration file
 
-## define training data folder
+# define training data folder
 root = "/tigress/jtdu/map_language_models/user_files/"
+#root = "/scratch/gpfs/jtdu/"
 
 # set up exclude genes
 exclude = {"d1": [], "d2": [],
@@ -12,22 +13,29 @@ exclude = {"d1": [], "d2": [],
 ref_paths = {
 "d1": root + "d1_primateNegativesDocmPositives_key_Rostlab_Bert_reference.tsv",
 "d2": root + "d2_primateNegativesDocmPositives_key_Rostlab_Bert_reference.tsv",
-#"mcf10A": root + "mmc2_newlabs_key_Rostlab_Bert_reference.tsv",
-"maveDB": "/scratch/gpfs/jtdu/mavedb_offset_key_Rostlab_Bert_reference.tsv"
+"mcf10A": root + "mmc2_newlabs_key_Rostlab_Bert_reference.tsv",
+"maveDB": root + "mavedb_offset_key_Rostlab_Bert_reference.tsv"
 }
 
 ## define paths to UniRep Vectors of mutant sequences
 mut_paths = {
-"d1": root + 'd1_primateNegativesDocmPositives_key_Rostlab_Bert_mutant.tsv',
+ "d1": root + 'd1_primateNegativesDocmPositives_key_Rostlab_Bert_mutant.tsv',
  "d2": root + 'd2_primateNegativesDocmPositives_key_Rostlab_Bert_mutant.tsv',
-# "mcf10A": root + "mmc2_newlabs_key_Rostlab_Bert_mutant.tsv"
- "maveDB": "/scratch/gpfs/jtdu/mavedb_offset_key_Rostlab_Bert_mutant.tsv"
+"mcf10A": root + "mmc2_newlabs_key_Rostlab_Bert_mutant.tsv"
+ "maveDB": root + "mavedb_offset_key_Rostlab_Bert_mutant.tsv"
+}
+
+pca_mats = {
+ "pca100": root + 'hs/PCA_mat/pcamatrix_Hg38samp_dim_100.pkl',
+ "pca250": root + 'hs/PCA_mat/pcamatrix_Hg38samp_dim_250.pkl',
+ "pca500": root + 'hs/PCA_mat/pcamatrix_Hg38samp_dim5100.pkl',
+ "pca1000": root + 'hs/PCA_mat/pcamatrix_Hg38samp_dim_1000.pkl'
 }
 
 ## define indices for start of data/end of metadata
 # data must separate data (on right) from metadata (left)
-start = {"d1":5, "d2":5, "t1":8, "t2":8, "mcf10A":14, "ptenDMS":10, "maveDB":12}
+start = {"d1":6, "d2":6, "t1":8, "t2":8, "mcf10A":15, "ptenDMS":10, "maveDB":13}
 
 ## specify column names
-cols = ["Rost_" + str(i) for i in range(0,1024)] 
+cols = ["Rost_" + str(i) for i in range(0,4096)] 
 metas = ['protein_id', 'protein_position', 'reference_aa', 'mutant_aa', 'label']
