@@ -8,3 +8,4 @@ __pycache__/*
 *test*
 sklearn/results/*
 sklearn/sh*
+complete_datasets/*
