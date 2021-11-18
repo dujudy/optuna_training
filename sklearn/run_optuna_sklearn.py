@@ -94,6 +94,14 @@ def optimize_hyperparams(feature_type = "ref", scoring_metric = "PR", n_trials =
     study.optimize(specified_objective, n_trials = n_trials)
     return(study)
 
+def plot_pca(pca_mat, aa_col, output_name):
+    # Plots the first two principal components
+
+    pca_df = pd.DataFrame({"PC1": pca_mat[:,0], "PC2": pca_mat[:,1], "amino_acid":aa_col})
+    fig = sns.scatterplot(x = "PC1", y = "PC2", hue = "amino_acid", data = pca_df).get_figure()
+    fig.savefig(output_name)
+
+metadata[newfeat][data_name]
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Optuna optimization of hyperparameters.")
     parser.add_argument("--model_name", type = str, default = "GB", choices = ["GB"],
@@ -125,10 +133,16 @@ if __name__ == "__main__":
         print(args.pca_key)
         pca = faiss.read_VectorTransform(pca_mats[args.pca_key])
         newfeat = args.feature_type + "_" + args.pca_key; features[newfeat] = {}; labels[newfeat] = {}; metadata[newfeat] = {};
+
         for data_name in features[args.feature_type].keys():
             features[newfeat][data_name] = pca.apply_py(np.ascontiguousarray(features[args.feature_type][data_name].astype('float32')))
             labels[newfeat][data_name] = labels[args.feature_type][data_name]
             metadata[newfeat][data_name] = metadata[args.feature_type][data_name]
+            run_id = args.results_folder + "/" + args.pca_key.replace(".pkl", "") + "_"+ args.lang_model_type + args.feature_type + ".png"
+            if data_name == "mut":
+                plot_pca(features[newfeat][data_name], metadata[newfeat][data_name]["mutant_aa"], run_id)
+            elif data_name == "ref":
+                plot_pca(features[newfeat][data_name], metadata[newfeat][data_name]["reference_aa"], run_id)
             del data_name
     args.feature_type = newfeat
 
