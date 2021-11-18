@@ -1,3 +1,4 @@
+*.sh
 *.png
 *config.py
 config.py

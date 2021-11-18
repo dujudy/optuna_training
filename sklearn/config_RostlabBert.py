@@ -21,15 +21,15 @@ ref_paths = {
 mut_paths = {
  "d1": root + 'd1_primateNegativesDocmPositives_key_Rostlab_Bert_mutant.tsv',
  "d2": root + 'd2_primateNegativesDocmPositives_key_Rostlab_Bert_mutant.tsv',
-"mcf10A": root + "mmc2_newlabs_key_Rostlab_Bert_mutant.tsv"
+"mcf10A": root + "mmc2_newlabs_key_Rostlab_Bert_mutant.tsv",
  "maveDB": root + "mavedb_offset_key_Rostlab_Bert_mutant.tsv"
 }
 
 pca_mats = {
- "pca100": root + 'hs/PCA_mat/pcamatrix_Hg38samp_dim_100.pkl',
- "pca250": root + 'hs/PCA_mat/pcamatrix_Hg38samp_dim_250.pkl',
- "pca500": root + 'hs/PCA_mat/pcamatrix_Hg38samp_dim5100.pkl',
- "pca1000": root + 'hs/PCA_mat/pcamatrix_Hg38samp_dim_1000.pkl'
+ "pca100": root + 'hs/pcamatrix_Hg38samp_dim_100.pca',
+ "pca250": root + 'hs/pcamatrix_Hg38samp_dim_250.pca',
+ "pca500": root + 'hs/pcamatrix_Hg38samp_dim5100.pca',
+ "pca1000": root + 'hs/pcamatrix_Hg38samp_dim_1000.pca'
 }
 
 ## define indices for start of data/end of metadata

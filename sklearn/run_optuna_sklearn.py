@@ -121,13 +121,15 @@ if __name__ == "__main__":
     features, labels, input_df, metadata, feature_columns = load_data(ref_paths, mut_paths, start, cols, exclude)
 
     # Apply PCA if applicable
-    if args.pca_key not "None":
-        pca = pickle.load(pca_mats[args.pca_key])
-        newfeat = args.feature_type + "_" + args.pca_key; features[newfeat] = {}
+    if args.pca_key != "None":
+        print(args.pca_key)
+        pca = faiss.read_VectorTransform(pca_mats[args.pca_key])
+        newfeat = args.feature_type + "_" + args.pca_key; features[newfeat] = {}; labels[newfeat] = {};
         for data_name in features[args.feature_type].keys():
-            features[newfeat][data_name] = pca.apply_py(features[args.feature_type][data_name].astype('float32'))
+            features[newfeat][data_name] = pca.apply_py(np.ascontiguousarray(features[args.feature_type][data_name].astype('float32')))
+            labels[newfeat][data_name] = labels[args.feature_type][data_name]
             del data_name
-        args.feature_type = newfeat
+    args.feature_type = newfeat
 
     # Check if optuna-trained model already exists
     run_id = args.results_folder + "/" + "{write_type}" + args.lang_model_type + args.feature_type + "_" + args.model_name + args.scoring_metric
