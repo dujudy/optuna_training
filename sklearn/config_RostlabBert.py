@@ -26,10 +26,10 @@ mut_paths = {
 }
 
 pca_mats = {
- "pca100": root + 'hs/pcamatrix_Hg38samp_dim_100.pca',
- "pca250": root + 'hs/pcamatrix_Hg38samp_dim_250.pca',
- "pca500": root + 'hs/pcamatrix_Hg38samp_dim5100.pca',
- "pca1000": root + 'hs/pcamatrix_Hg38samp_dim_1000.pca'
+ "pca100": root + 'hs/pca1500aa/pcamatrix_Hg38samp_dim_100.pca',
+ "pca250": root + 'hs/pca1500aa/pcamatrix_Hg38samp_dim_250.pca',
+ "pca500": root + 'hs/pca1500aa/pcamatrix_Hg38samp_dim5100.pca',
+ "pca1000": root + 'hs/pca1500aa/pcamatrix_Hg38samp_dim_1000.pca'
 }
 
 ## define indices for start of data/end of metadata
