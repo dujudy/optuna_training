@@ -96,12 +96,10 @@ def optimize_hyperparams(feature_type = "ref", scoring_metric = "PR", n_trials =
 
 def plot_pca(pca_mat, aa_col, output_name):
     # Plots the first two principal components
-
     pca_df = pd.DataFrame({"PC1": pca_mat[:,0], "PC2": pca_mat[:,1], "amino_acid":aa_col})
     fig = sns.scatterplot(x = "PC1", y = "PC2", hue = "amino_acid", data = pca_df).get_figure()
     fig.savefig(output_name)
 
-metadata[newfeat][data_name]
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Optuna optimization of hyperparameters.")
     parser.add_argument("--model_name", type = str, default = "GB", choices = ["GB"],
