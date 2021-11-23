@@ -10,3 +10,4 @@ __pycache__/*
 sklearn/results/*
 sklearn/sh*
 complete_datasets/*
+results/*
