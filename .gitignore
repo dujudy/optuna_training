@@ -1,12 +1,15 @@
-*.sh
-*.png
-*config.py
-config.py
+# Cache items
 *.pyc
 __pycache__/*
 .ipynb_checkpoints/*
 .DS_Store
-*test*
+
+# Files specific to User
+results/*
 sklearn/results/*
 sklearn/sh*
 complete_datasets/*
+*.png
+*.sh
+*config.py
+transformed/*
