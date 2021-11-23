@@ -28,7 +28,7 @@ mut_paths = {
 pca_mats = {
  "pca100": root + 'hs/pca1500aa/pcamatrix_Hg38samp_dim_100.pca',
  "pca250": root + 'hs/pca1500aa/pcamatrix_Hg38samp_dim_250.pca',
- "pca500": root + 'hs/pca1500aa/pcamatrix_Hg38samp_dim5100.pca',
+ "pca500": root + 'hs/pca1500aa/pcamatrix_Hg38samp_dim500.pca',
  "pca1000": root + 'hs/pca1500aa/pcamatrix_Hg38samp_dim_1000.pca'
 }
 

@@ -16,6 +16,7 @@ import faiss
 import pickle
 
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import roc_auc_score, precision_recall_curve, auc
 from os.path import exists
 from os import system
@@ -27,6 +28,8 @@ from plot_optuna_results import *
 def define_model(model_name, params):
     if model_name =="GB":
         return GradientBoostingClassifier(**params)
+    elif model_name == "SVC": fix
+    elif model_name == "NN": fix
     else:
         raise SomeError("Model name not valid.")
 
@@ -69,19 +72,24 @@ def score_model(parameters, train_feats, train_labs, test_feats, test_labs, metr
 
 def objective(trial, train, test, type, feats, input_df, metric,  model_name):
     # define model
-    params = {
-        'max_depth': trial.suggest_int("max_depth", 1, 20),
-        "n_estimators": trial.suggest_int("n_estimators", 75, 300),
-        "min_samples_split": trial.suggest_int("min_samples_split", 2, 10),
-        #"min_samples_leaf": trial.suggest_int("min_samples_leaf", 1, 10),
-        "min_impurity_decrease": trial.suggest_float("min_impurity_decrease", 0.0, 0.25),
-        "min_samples_leaf": trial.suggest_int("min_samples_leaf", 5, 25), # make min larger 1--> 5?
-        "random_state": 7}
+    if model_name == "GB":
+        params = {
+            'max_depth': trial.suggest_int("max_depth", 1, 20),
+            "n_estimators": trial.suggest_int("n_estimators", 75, 300),
+            "min_samples_split": trial.suggest_int("min_samples_split", 2, 10),
+            #"min_samples_leaf": trial.suggest_int("min_samples_leaf", 1, 10),
+            "min_impurity_decrease": trial.suggest_float("min_impurity_decrease", 0.0, 0.25),
+            "min_samples_leaf": trial.suggest_int("min_samples_leaf", 5, 25), # make min larger 1--> 5?
+            "random_state": 7}
+    elif model_name == "SVC": fix
+    elif model_name == "NN": fix
+    else:
+        raise SomeError("Model name not valid.")
+
     # train and evaluate models
     fold_1_auc = score_model(params, feats[type][train], labels[type][train], feats[type][test], labels[type][test], metric,  model_name)
     fold_2_auc = score_model(params, feats[type][test], labels[type][test], feats[type][train], labels[type][train], metric,  model_name)
     return 0.5 * (fold_1_auc + fold_2_auc)
-
 
 def fill_objective(train, test, type, feats, labs, scoring_metric, model_name):
   def filled_obj(trial):
@@ -105,12 +113,12 @@ metadata[newfeat][data_name]
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Optuna optimization of hyperparameters.")
     parser.add_argument("--model_name", type = str, default = "GB", choices = ["GB"],
-                        help="Name of Machine Learning algorithm.")
+                        help="Name of Machine Learning algorithm.") fix
     parser.add_argument("--scoring_metric", type=str, default= "auPRc",
                         choices = ["auPRC", "auROC", "accuracy"],
                         help="Full path to directory with labeled examples. ROC, PR, accuracy.")
     parser.add_argument("--feature_type", type=str, default= "ref",
-                        choices = ["ref", "mut", "abs", "mutref"],
+                        #choices = ["ref", "mut", "abs", "mutref"],
                         help="Mapping of aa representation between mutant and reference.")
     parser.add_argument("--n", type=int, default=200, help="Number of models for oputuna to train.")
     parser.add_argument("--results_folder", type=str, default = "results/",
@@ -122,10 +130,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Load data
-    if args.lang_model_type == "UniRep":
-        from config import *
-    elif args.lang_model_type == "Rostlab_Bert":
-        from config_RostlabBert import *
+    root, exclude, ref_paths, mut_paths, pca_mats, start, cols, metas = configure(args)
     features, labels, input_df, metadata, feature_columns = load_data(ref_paths, mut_paths, start, cols, exclude)
 
     # Apply PCA if applicable
