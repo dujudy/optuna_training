@@ -5,11 +5,10 @@ __pycache__/*
 .DS_Store
 
 # Files specific to User
-results/*
-sklearn/results/*
-sklearn/sh*
+optuna_via_sklearn/results/*
 complete_datasets/*
+transformed/*
+*.csv
+*.joblib
 *.png
 *.sh
-*config.py
-transformed/*

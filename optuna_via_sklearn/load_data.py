@@ -56,13 +56,13 @@ def load_data(ref_paths, mut_paths, start, cols, exclude, metas, feat_type):
             metadata["ref"][key] = input_df["ref"][key].iloc[:,0:start[key]]
             if feat_type == "ref":
                 pass
-        elif feat_type != "ref":
+        if feat_type != "ref":
             # Reading in mutant data
             input_df["mut"][key], features["mut"][key], labels["mut"][key] = process_data(mut_paths[key], start[key], exclude[key])
             metadata["mut"][key] = input_df["mut"][key].iloc[:,0:start[key]]
             if feat_type == "mut":
                 pass
-        else:
+        if feat_type not in ["ref", "mut"]:
             # Further processing necessary for feature_type abs, mutref
             metas = list(metadata["mut"][key].columns)
             dim = input_df["ref"][key].shape[1]

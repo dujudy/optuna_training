@@ -32,13 +32,13 @@ def configure(args):
         "d1": root + 'd1_primateNegativesDocmPositives_key_Rostlab_Bert_mutant.tsv',
          "d2": root + 'd2_primateNegativesDocmPositives_key_Rostlab_Bert_mutant.tsv',
         "mcf10A": root + "mmc2_newlabs_key_Rostlab_Bert_mutant.tsv",
-         "maveDB": root + "mavedb_offset_key_Rostlab_Bert_mutant.tsv"
+        "maveDB": root + "mavedb_offset_key_Rostlab_Bert_mutant.tsv"
         }
         ## Define paths to PCA matrices applied to data
         pca_mats = {
          "pca100": root + 'hs/pca1500aa/pcamatrix_Hg38samp_dim_100.pca',
          "pca250": root + 'hs/pca1500aa/pcamatrix_Hg38samp_dim_250.pca',
-         "pca500": root + 'hs/pca1500aa/pcamatrix_Hg38samp_dim500.pca',
+         "pca500": root + 'hs/pca1500aa/pcamatrix_Hg38samp_dim_500.pca',
          "pca1000": root + 'hs/pca1500aa/pcamatrix_Hg38samp_dim_1000.pca'
         }
 

@@ -76,7 +76,7 @@ if __name__ == "__main__":
     if args.pca_key != "None":
         print("Loading PCA matrix at: " + args.pca_key)
         pca = faiss.read_VectorTransform(pca_mats[args.pca_key])
-        newfeat = args.feature_type + "_" + args.pca_key; features[newfeat] = {}; labels[newfeat] = {};
+        newfeat = args.feature_type + "_" + args.pca_key; features[newfeat] = {}; labels[newfeat] = {}; metadata[newfeat] = {};
 
         for data_name in features[args.feature_type].keys():
             features[newfeat][data_name] = pca.apply_py(np.ascontiguousarray(features[args.feature_type][data_name].astype('float32')))
