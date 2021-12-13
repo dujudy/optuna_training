@@ -5,8 +5,8 @@ GradientBoostingClassifier.) auROC, auPRC or accuracy between datasets can be
 used as the optimization objective. Returns an optuna study class.
 
   Typical usage examples:
-    python3 run_optuna_sklearn.py
-    python3 run_optuna_sklearn.py --scoring_metric ROC
+    python3 run_optuna_training_testing.py
+    python3 run_optuna_training_testing.py --scoring_metric ROC
 """
 from joblib import dump, load
 import optuna
@@ -45,7 +45,7 @@ def fill_objective(train, test, type, feats, labs, scoring_metric, model_name):
   return filled_obj
 
 def optimize_hyperparams(feature_type, scoring_metric, n_trials,  model_name):
-    specified_objective = fill_objective("d1", "d2", feature_type, features, labels, scoring_metric,  model_name)
+    specified_objective = fill_objective("crossvalidation_1", "crossvalidation_2", feature_type, features, labels, scoring_metric,  model_name)
     study = optuna.create_study(direction="maximize")
     study.optimize(specified_objective, n_trials = n_trials)
     return(study)
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     # Define prefix for all files produced by run
     run_id = args.results_folder + "/" + "{write_type}" + args.lang_model_type + "_" + args.feature_type + "_" + args.model_name + args.scoring_metric
     # Check if optuna-trained model already exists
-    model_path = run_id.format(write_type="d_") + '_model.joblib'
+    model_path = run_id.format(write_type="full_") + '_model.joblib'
     if exists(model_path):
         # Load model
         print("Loading model at: " + model_path)
@@ -108,13 +108,13 @@ if __name__ == "__main__":
         final_classifier = train_model(
             args.model_name,
             optuna_run.best_trial.params,
-            features[args.feature_type]["d"],
-            labels[args.feature_type]["d"],
+            features[args.feature_type]["training"],
+            labels[args.feature_type]["training"],
             save = model_path)
 
     # generate prediction probabilities
     for data_name in ref_paths:
-        if data_name not in ["d1","d2", "d"]:
+        if data_name not in ["crossvalidation_1","crossvalidation_2", "training"]:
             print(data_name); print(model_path);
             generate_prediction_probs(final_classifier,
                                       args.model_name + "_opt" + args.scoring_metric,
