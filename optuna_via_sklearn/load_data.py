@@ -14,6 +14,7 @@ def process_data(path, features_start, exclude):
     # Reads in and processes training/testing data
     print("Loading " + path)
     input_data = pd.read_csv(path, header = 0, sep='\t', comment='#').dropna()
+
     # Remove ensembl protein IDs specified by exclude
     input_data = input_data[input_data["protein_id"].isin(exclude) == False]
 
@@ -23,6 +24,9 @@ def process_data(path, features_start, exclude):
     # Binarize objective label column
     input_data['label'] = input_data["label"].replace("positives", 1).replace("negatives", 0)\
 
+    # Drop Duplicate columns
+    input_data = input_data.drop_duplicates().reset_index(drop = True)
+
     # Subset features and labels
     features = input_data.iloc[:,features_start:(len(input_data.columns))].to_numpy()
     labels = input_data["label"]
@@ -31,7 +35,7 @@ def process_data(path, features_start, exclude):
 
 ### Combine split datasets
 def combine_d(data_dict):
-    return np.concatenate((data_dict["d1"], data_dict["d2"]), axis=0)
+    return np.concatenate((data_dict["crossvalidation_1"], data_dict["crossvalidation_2"]), axis=0)
 
 def load_data(ref_paths, mut_paths, start, cols, exclude, metas, feat_type):
     # Initialize data dicts
@@ -84,7 +88,7 @@ def load_data(ref_paths, mut_paths, start, cols, exclude, metas, feat_type):
 
     for f in features.keys():
         if len(features[f]) > 0:
-            features[f]["d"] = combine_d(features[f])
-            labels[f]["d"] = combine_d(labels[f])
-            metadata[f]["d"] = metadata[f]["d1"].append(metadata[f]["d2"]).reset_index(drop = True)
+            features[f]["training"] = combine_d(features[f])
+            labels[f]["training"] = combine_d(labels[f])
+            metadata[f]["training"] = metadata[f]["crossvalidation_1"].append(metadata[f]["crossvalidation_2"]).reset_index(drop = True)
     return features, labels, input_df, metadata, feature_columns

@@ -1,6 +1,22 @@
 """Optuna optimization of hyperparameters: Configuration Function
 
+<<<<<<< HEAD
 Specifies paths to relevant training data. Returns an optuna study class.
+=======
+Configuration file for the run_optuna library. Returns dicts specifying:
+    - paths to relevant training/testing data
+    - start index that partitions metadata (left) from features (right)
+    - ensembl protein IDs to exclude from each dataset.
+Data must  separate metadata (left) from features (right) at index specified by
+'start'.
+
+Returns lists that specifies the column names of the features and relevant
+metadata.
+
+All data must be tab-separated files with metadata (left) fully partitioned from
+the features (right). Moreover, all data must include the following columns:
+    protein_id, protein_position, reference_aa, mutant_aa, and label.
+>>>>>>> 622fe906ebed958481549a2219981bac964fe463
 
   Typical usage examples:
     python3
@@ -9,6 +25,7 @@ Specifies paths to relevant training data. Returns an optuna study class.
 # data must include the columns protein_id, protein_position, reference_aa, mutant_aa, and label
 
 def configure(args):
+<<<<<<< HEAD
     # define training data folder
     root = "/tigress/jtdu/map_language_models/user_files/"
 
@@ -16,7 +33,19 @@ def configure(args):
     exclude = {"d1": [], "d2": [],
         "mcf10A":["ENSP00000361021", "ENSP00000483066"], #PTEN
         "maveDB": ["ENSP00000312236", "ENSP00000350283", "ENSP00000418960", "ENSP00000417148", "ENSP00000496570", "ENSP00000465818", "ENSP00000467329", "ENSP00000465347", "ENSP00000418775", "ENSP00000418548", "ENSP00000420705", "ENSP00000419481", "ENSP00000420412", "ENSP00000418819", "ENSP00000418212", "ENSP00000417241", "ENSP00000326002", "ENSP00000489431", "ENSP00000397145", "ENSP00000419274", "ENSP00000498906", "ENSP00000419988", "ENSP00000420253", "ENSP00000418986", "ENSP00000419103", "ENSP00000420201", "ENSP00000495897", "ENSP00000417554", "ENSP00000417988", "ENSP00000420781", "ENSP00000494614", "ENSP00000478114"] #BRCA1
+=======
+    # Define data folder. Folder must end with "/" character.
+    root = "optuna_via_sklearn/user_files/"
+
+    # Set up genes to exclude from each dataset.
+        # To include all genes, use empty list.
+    exclude = {
+         "crossvalidation_1": [], "crossvalidation_2": [],
+        # Add testing sets below.
+        # "testing_dataset_1_name": ["Gene 1", "Gene 2", ...],
+        # "testing_dataset_2_name": []
     }
+
     # All data must separate data (right) from metadata (left)
     if args.lang_model_type == "Rostlab_Bert":
         ## Define paths to Bert Vectors of reference sequences
@@ -76,7 +105,6 @@ def configure(args):
 
         ## Specify column names
         cols = ["UR_" + str(i) for i in range(0,1900)]
-
 
     # metadata column names of interest
     metas = ['protein_id', 'protein_position', 'reference_aa', 'mutant_aa', 'label']
