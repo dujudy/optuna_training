@@ -9,6 +9,7 @@ Returns objects of class dict that contain features or metadata of origin specif
 """
 import pandas as pd
 import numpy as np
+from sklearn.model_selection import train_test_split
 
 def process_data(path, features_start, exclude):
     # Reads in and processes training/testing data
@@ -37,7 +38,7 @@ def process_data(path, features_start, exclude):
 def combine_d(data_dict):
     return np.concatenate((data_dict["crossvalidation_1"], data_dict["crossvalidation_2"]), axis=0)
 
-def load_data(ref_paths, mut_paths, start, cols, exclude, metas, feat_type):
+def load_data(ref_paths, mut_paths, start, cols, exclude, metas, feat_type, split):
     # Initialize data dicts
     features = {"ref":{}, "mut":{}, "abs":{}, "mutref":{}}#"absref":{}, "absmut":{}
     labels = {"ref":{}, "mut":{}, "abs":{}, "absref":{}, "absmut":{}, "mutref":{}};
@@ -88,7 +89,17 @@ def load_data(ref_paths, mut_paths, start, cols, exclude, metas, feat_type):
 
     for f in features.keys():
         if len(features[f]) > 0:
-            features[f]["training"] = combine_d(features[f])
-            labels[f]["training"] = combine_d(labels[f])
-            metadata[f]["training"] = metadata[f]["crossvalidation_1"].append(metadata[f]["crossvalidation_2"]).reset_index(drop = True)
+            if split != None:
+                split = 1 / float(split)
+                input_df[f]["crossvalidation_1"], input_df[f]["crossvalidation_1"] = train_test_split(input_df[f]["training"], train_size=split, random_state=7, shuffle=True, stratify="protein_id")
+                metadata[f]["crossvalidation_1"] = input_df[f]["crossvalidation_1"].iloc[:,0:start["training"]]
+                metadata[f]["crossvalidation_2"] = input_df[f]["crossvalidation_2"].iloc[:,0:start["training"]]
+                features[f]["crossvalidation_1"] = input_df[f]["crossvalidation_1"].iloc[:,start:(len(input_df[f]["crossvalidation_1"].columns))].to_numpy()
+                features[f]["crossvalidation_2"] = input_df[f]["crossvalidation_2"].iloc[:,start:(len(input_df[f]["crossvalidation_2"].columns))].to_numpy()
+                labels[f]["crossvalidation_1"] = input_df[f]["crossvalidation_1"]["label"]
+                labels[f]["crossvalidation_2"] = input_df[f]["crossvalidation_2"]["label"]
+            else:
+                features[f]["training"] = combine_d(features[f])
+                labels[f]["training"] = combine_d(labels[f])
+                metadata[f]["training"] = metadata[f]["d1"].append(metadata[f]["d2"]).reset_index(drop = True)
     return features, labels, input_df, metadata, feature_columns
