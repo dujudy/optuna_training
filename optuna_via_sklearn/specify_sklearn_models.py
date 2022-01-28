@@ -19,7 +19,7 @@ def define_model(model_name, params):
     else:
         raise SomeError("Model name not valid.")
 
-def objective(trial, train, test, type, feats, labs, metric,  model_name):
+def objective(trial, train, test, type, feats, labs, input_df, metric,  model_name):
     # define model
     if model_name == "GB":
         params = {
@@ -54,6 +54,6 @@ def objective(trial, train, test, type, feats, labs, metric,  model_name):
         raise SomeError("Model name not valid.")
 
     # train and evaluate models
-    fold_1_auc = score_model(params, feats[type][train], labs[type][train], feats[type][test], labs[type][test], metric,  model_name)
-    fold_2_auc = score_model(params, feats[type][test], labs[type][test], feats[type][train], labs[type][train], metric,  model_name)
+    fold_1_auc = score_model(params, feats[type][train], labs[type][train], feats[type][test], labs[type][test], input_df[type][test], metric,  model_name)
+    fold_2_auc = score_model(params, feats[type][test], labs[type][test], feats[type][train], labs[type][train], input_df[type][train], metric,  model_name)
     return 0.5 * (fold_1_auc + fold_2_auc)

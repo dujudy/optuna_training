@@ -14,6 +14,7 @@ def process_data(path, features_start, exclude):
     # Reads in and processes training/testing data
     print("Loading " + path)
     input_data = pd.read_csv(path, header = 0, sep='\t', comment='#').dropna()
+
     # Remove ensembl protein IDs specified by exclude
     input_data = input_data[input_data["protein_id"].isin(exclude) == False]
 
@@ -22,6 +23,9 @@ def process_data(path, features_start, exclude):
 
     # Binarize objective label column
     input_data['label'] = input_data["label"].replace("positives", 1).replace("negatives", 0)\
+
+    # Drop Duplicate columns
+    input_data = input_data.drop_duplicates().reset_index(drop = True)
 
     # Subset features and labels
     features = input_data.iloc[:,features_start:(len(input_data.columns))].to_numpy()

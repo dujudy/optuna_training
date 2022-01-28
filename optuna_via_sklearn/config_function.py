@@ -60,7 +60,7 @@ def configure(args):
         "testing_dataset_1_name":15}
 
     ## Specify column names of feature columns
-    cols = # example: ["Rost_" + str(i) for i in range(0,4096)]
+    cols = ["Rost_" + str(i) for i in range(0,4096)]
 
     # Metadata column names of interest
     metas = ['protein_id', 'protein_position', 'reference_aa', 'mutant_aa', 'label']

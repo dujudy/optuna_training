@@ -20,7 +20,7 @@ def parse_run_optuna_args():
                         choices = ["GB", "SVC", "NN"],
                         help="Name of Machine Learning algorithm.")
     parser.add_argument("--scoring_metric", type=str, default= "auROC",
-                        choices = ["auPRC", "auROC", "accuracy"],
+                        choices = ["auPRC", "auROC", "auROC_bygene", "accuracy"],
                         help="Full path to directory with labeled examples. ROC, PR, accuracy.")
     parser.add_argument("--n", type=int, default=200, help="Number of models for oputuna to train.")
 
