@@ -4,6 +4,7 @@ import faiss
 import pickle
 
 from run_optuna_training_testing import *
+from sklearn.model_selection import GroupShuffleSplit
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
@@ -19,7 +20,7 @@ def define_model(model_name, params):
     else:
         raise SomeError("Model name not valid.")
 
-def objective(trial, train, test, type, feats, labs, input_df, metric,  model_name):
+def objective(trial, type, feats, labs, input_df, metric,  model_name):
     # define model
     if model_name == "GB":
         params = {
@@ -53,7 +54,13 @@ def objective(trial, train, test, type, feats, labs, input_df, metric,  model_na
     else:
         raise SomeError("Model name not valid.")
 
+    gss = GroupShuffleSplit(n_splits=args.split, train_size = 1 / args.split)
+    split = gss.split(input_df[type]["training"], groups = input_df[type]["training"]["protein_id"])
+    for train, test in split:
+         print(input_df[type]["training"]["label"][train].value_counts())
+         print(input_df[type]["training"]["label"][test].value_counts())
+
     # train and evaluate models
-    fold_1_auc = score_model(params, feats[type][train], labs[type][train], feats[type][test], labs[type][test], input_df[type][test], metric,  model_name)
-    fold_2_auc = score_model(params, feats[type][test], labs[type][test], feats[type][train], labs[type][train], input_df[type][train], metric,  model_name)
+    fold_1_auc = score_model(params, feats[type]["training"][train], labs[type]["training"][train], feats[type]["training"][test], labs[type]["training"][test], input_df[type]["training"][test], metric,  model_name)
+    fold_2_auc = score_model(params, feats[type]["training"][test], labs[type]["training"][test], feats[type]["training"][train], labs[type]["training"][train], input_df[type]["training"][train], metric,  model_name)
     return 0.5 * (fold_1_auc + fold_2_auc)

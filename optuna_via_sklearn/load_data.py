@@ -33,11 +33,8 @@ def process_data(path, features_start, exclude):
 
     return input_data, features, labels
 
-### Combine split datasets
-def combine_d(data_dict):
-    return np.concatenate((data_dict["crossvalidation_1"], data_dict["crossvalidation_2"]), axis=0)
-
-def load_data(ref_paths, mut_paths, start, cols, exclude, metas, feat_type):
+#def load_data(ref_paths, mut_paths, start, cols, exclude, metas, feat_type):
+def load_data(config):
     # Initialize data dicts
     features = {"ref":{}, "mut":{}, "abs":{}, "mutref":{}}#"absref":{}, "absmut":{}
     labels = {"ref":{}, "mut":{}, "abs":{}, "absref":{}, "absmut":{}, "mutref":{}};

@@ -25,11 +25,17 @@ def parse_run_optuna_args():
     parser.add_argument("--n", type=int, default=200, help="Number of models for oputuna to train.")
 
     # Data specification parameters
+    parser.add_argument("--training_path", type=str, help="Path to training data.")
+    parser.add_argument("--training_alias", type=str, help="Path to testing data.", nargs = '*')
+
+    parser.add_argument("--testing_path", type=str, help="Path to testing data.", nargs = '*')
+    parser.add_argument("--testing_alias", type=str, help="Path to testing data.", nargs = '*')
     parser.add_argument("--feature_type", type=str, default= "mut",
                         help="Mapping of aa representation between mutant and reference.")
     parser.add_argument("--lang_model_type", type=str, default = "lang_model_type", #choices = ["UniRep", "Rostlab_Bert", "other"],
                         help="Type of language model underlying features.")
     parser.add_argument("--pca_key", type = str, default = "None", help="PCA matrix specified by key in pca_mats. See config file for further specifications.")
+    parser.add_argument("--split", type = int, default = 2, help="Number of folds to split crossvalidation data into.")
 
 
     args = parser.parse_args()

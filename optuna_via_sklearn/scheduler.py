@@ -39,3 +39,30 @@ for l in ["Rostlab_Bert"]: #, "UniRep"]:
                         time.sleep(1)
 
 #python3 run_optuna_sklearn.py --model_name GB --lang_model_type Rostlab_Bert --scoring_metric auPRC --feature_type abs --results_folder /tigress/jtdu/optuna_training/sklearn/results/Rostlab_Bert
+
+
+root, exclude, ref_paths, mut_paths, pca_mats, start, cols, metas = configure(args)
+features, labels, input_df, metadata, feature_columns = load_data(ref_paths, mut_paths, start, cols, exclude, metas, args.feature_type, args.split)
+
+    # define training data folder
+    root = "/tigress/jtdu/map_language_models/user_files/"
+
+            "d1": root + "d1_primateNegativesDocmPositives_key_Rostlab_Bert_reference.tsv",
+            "d2": root + "d2_primateNegativesDocmPositives_key_Rostlab_Bert_reference.tsv",
+ref_paths = {
+    "d1": root + "d1_primateNegativesDocmPositives_key_Rostlab_Bert_reference.tsv",
+    "d2": root + "d2_primateNegativesDocmPositives_key_Rostlab_Bert_reference.tsv",
+    "mcf10A": root + "mmc2_newlabs_key_Rostlab_Bert_reference.tsv",
+    "maveDB": root + "mavedb_offset_key_Rostlab_Bert_reference.tsv"
+}
+
+## Define paths to Bert Vectors of mutant sequences
+mut_paths = {
+"d1": root + 'd1_primateNegativesDocmPositives_key_Rostlab_Bert_mutant.tsv',
+ "d2": root + 'd2_primateNegativesDocmPositives_key_Rostlab_Bert_mutant.tsv',
+"mcf10A": root + "mmc2_newlabs_key_Rostlab_Bert_mutant.tsv",
+"maveDB": root + "mavedb_offset_key_Rostlab_Bert_mutant.tsv"
+}
+
+
+python3 run_optuna_training_testing.py --model_name GB --n 2 --lang_model_type Rostlab_Bert --training_path --training_alias --testing_path --testing_alias --results_folder /tigress/jtdu/optuna_training/sklearn/results/test/ >> /tigress/jtdu/optuna_training/optuna_via_sklearn/sh/opt_{metric}{data_type}{lang_type}.log
