@@ -30,6 +30,7 @@ def parse_run_optuna_args():
     parser.add_argument("--lang_model_type", type=str, default = "lang_model_type", #choices = ["UniRep", "Rostlab_Bert", "other"],
                         help="Type of language model underlying features.")
     parser.add_argument("--pca_key", type = str, default = "None", help="PCA matrix specified by key in pca_mats. See config file for further specifications.")
+    parser.add_argument("--split", type = str, default = "None", help="Number of folds to split crossvalidation data into.")
 
 
     args = parser.parse_args()

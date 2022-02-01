@@ -72,8 +72,7 @@ def score_model(parameters, train_feats, train_labs, test_feats, test_labs, test
 
         score = roc_auc_score(test_labs, y_score)
     elif metric == "auROC_bygene": # Calculate by-gene auROC
-
-    input_df["ref"]["d1"].groupby('protein_id').apply(lambda x: roc_auc_score(x.label, y_score))
+        input_df["ref"]["d1"].groupby('protein_id').apply(lambda x: roc_auc_score(x.label, y_score))
 
     elif metric == "accuracy": # Calculate mean accuracy
         score = classifier.score(test_feats, test_labs)
@@ -85,7 +84,7 @@ if __name__ == "__main__":
 
     # Load training/testing data
     root, exclude, ref_paths, mut_paths, pca_mats, start, cols, metas = configure(args)
-    features, labels, input_df, metadata, feature_columns = load_data(ref_paths, mut_paths, start, cols, exclude, metas, args.feature_type)
+    features, labels, input_df, metadata, feature_columns = load_data(ref_paths, mut_paths, start, cols, exclude, metas, args.feature_type, args.split)
 
     # Apply PCA if applicable
     if args.pca_key != "None":
@@ -106,8 +105,7 @@ if __name__ == "__main__":
         args.feature_type = newfeat
 
     # Define prefix for all files produced by run
-    run_id = args.results_folder + "/" + "{write_type}" + args.
-    model_type + "_" + args.feature_type + "_" + args.model_name + args.scoring_metric
+    run_id = args.results_folder + "/" + "{write_type}" + args.model_type + "_" + args.feature_type + "_" + args.model_name + args.scoring_metric
     # Check if optuna-trained model already exists
     model_path = run_id.format(write_type="full_") + '_model.joblib'
     if exists(model_path):
@@ -129,7 +127,7 @@ if __name__ == "__main__":
             save = model_path)
 
     # generate prediction probabilities
-    for data_name in ref_paths:
+    for data_name in mut_paths:
         if data_name not in ["crossvalidation_1","crossvalidation_2", "training"]:
             print(data_name); print(model_path);
             generate_prediction_probs(final_classifier,
