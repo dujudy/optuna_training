@@ -17,7 +17,7 @@ def parse_run_optuna_args():
 
     # Optuna parameters
     parser.add_argument("--model_name", type = str, default = "GB",
-                        choices = ["GB", "SVC", "NN"],
+                        choices = ["GB", "SVC", "SVC_balanced", "NN", "Elastic"],
                         help="Name of Machine Learning algorithm.")
     parser.add_argument("--scoring_metric", type=str, default= "auROC",
                         choices = ["auPRC", "auROC", "auROC_bygene", "accuracy"],
@@ -26,10 +26,13 @@ def parse_run_optuna_args():
 
     # Data specification parameters
     parser.add_argument("--training_path", type=str, help="Path to training data.")
-    parser.add_argument("--training_alias", type=str, help="Path to testing data.", nargs = '*')
+    parser.add_argument("--training_alias", type=str, help="Path to testing data.")
+    parser.add_argument("--training_start", type=int, help="Index of column containing first feature.")
 
-    parser.add_argument("--testing_path", type=str, help="Path to testing data.", nargs = '*')
-    parser.add_argument("--testing_alias", type=str, help="Path to testing data.", nargs = '*')
+    parser.add_argument("--testing_path", type=str, help="Path to testing data.")
+    parser.add_argument("--testing_alias", type=str, help="Path to testing data.")
+    parser.add_argument("--testing_start", type=int, help="Index of column containing first feature.")
+
     parser.add_argument("--feature_type", type=str, default= "mut",
                         help="Mapping of aa representation between mutant and reference.")
     parser.add_argument("--lang_model_type", type=str, default = "lang_model_type", #choices = ["UniRep", "Rostlab_Bert", "other"],
