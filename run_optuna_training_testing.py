@@ -61,8 +61,8 @@ def score_model(parameters, train_feats, train_labs, test_feats, test_labs, test
         score = auc(recall, precision)
     elif metric == "auROC": # Calculate auROC
         score = roc_auc_score(test_labs, y_score)
-    #elif metric == "auROC_bygene": # Calculate by-gene auROC
-    #    .groupby('protein_id').apply(lambda x: roc_auc_score(x.label, y_score))
+    elif metric == "auROC_bygene": # Calculate by-gene auROC
+        input_df["ref"]["d1"].groupby('protein_id').apply(lambda x: roc_auc_score(x.label, y_score))
     elif metric == "accuracy": # Calculate mean accuracy
         score = classifier.score(test_feats, test_labs)
     return(score)
@@ -117,6 +117,7 @@ if __name__ == "__main__":
 
     # Define prefix for all files produced by run
     run_id = args.results_folder + "/" + "{write_type}" + args.lang_model_type + "_" + args.pca_key + "_" + args.model_name + args.scoring_metric
+
     # Check if optuna-trained model already exists
     model_path = run_id.format(write_type=args.training_alias + "_") + '_model.joblib'
     if exists(model_path):
@@ -126,7 +127,7 @@ if __name__ == "__main__":
     else:
         # Optimize hyperparameters with optuna
         print("Running optuna optimization.")
-        optuna_run = optimize_hyperparams(args.split, args.scoring_metric, args.n, args.model_name)
+        optuna_run = optimize_hyperparams(2, args.scoring_metric, args.n, args.model_name)
         plot_optuna_results(optuna_run, run_id.format(write_type="optuna_" + args.training_alias + "_"))
 
         # train final model using optuna's best hyperparameters

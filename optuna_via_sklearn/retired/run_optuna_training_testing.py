@@ -113,7 +113,7 @@ metadata[newfeat][data_name]
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Optuna optimization of hyperparameters.")
     parser.add_argument("--model_name", type = str, default = "GB", choices = ["GB"],
-                        help="Name of Machine Learning algorithm.") fix
+                        help="Name of Machine Learning algorithm.") 
     parser.add_argument("--scoring_metric", type=str, default= "auPRc",
                         choices = ["auPRC", "auROC", "accuracy"],
                         help="Full path to directory with labeled examples. ROC, PR, accuracy.")

@@ -72,7 +72,7 @@ def objective(trial, split, feats, labs, input_df, metric,  model_name):
         }
     else:
         raise SomeError("Model name not valid.")
-
+    
     # train and evaluate models
     fold_1_auc = score_model(params, feats["CV1"], labs["CV1"], feats["CV2"], labs["CV2"], input_df["CV2"], metric,  model_name)
     fold_2_auc = score_model(params, feats["CV2"], labs["CV2"], feats["CV1"], labs["CV1"], input_df["CV1"], metric,  model_name)

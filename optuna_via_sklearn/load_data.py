@@ -39,7 +39,6 @@ def process_data(path, features_start, exclude):
 
     return input_data, L2_features, labels
 
-#def load_data(ref_paths, mut_paths, start, cols, exclude, metas, feat_type):
 def load_data(config):
     # Initialize data dicts
     features = {}; labels = {}; input_df = {}; metadata = {};
