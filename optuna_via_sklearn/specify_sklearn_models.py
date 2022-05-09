@@ -66,8 +66,8 @@ def objective(trial, split, feats, labs, input_df, metric,  model_name):
     elif model_name == "Elastic":
         params = {
             "l1_ratio":trial.suggest_float("l1_ratio", 0, 1),
-            "C" : trial.suggest_float("C", 1.0, 100),
-            "penalty": "elasticnet", "solver":"saga",
+            "C" : trial.suggest_float("C", 1, 1000),
+            "penalty": "elasticnet", "solver":"saga", "max_iter":1000,
             "random_state": 7
         }
     else:

@@ -76,7 +76,7 @@ if __name__ == "__main__":
     features, labels, input_df, metadata = load_data(config)
     print(features)
 
-    # Rand 5 Training Testing Split
+    # Training Set (Cross-validation) Split
     gss = GroupShuffleSplit(n_splits=1, train_size = 1 / 2, random_state = 5)
     split = gss.split(input_df["training"], groups = input_df["training"]["protein_id"])
     for train, test in split:
@@ -97,7 +97,7 @@ if __name__ == "__main__":
         # pca = faiss.read_VectorTransform(config.pca_mats[args.pca_key])
 
     # Split mutref if applicable
-    for data_name in config.data_paths:
+    for data_name in input_df.keys():
         mut =  features[data_name][:,0:len(config.cols)]
         ref =  features[data_name][:,len(config.cols):features[data_name].shape[1]]
         # Apply PCA if applicable
@@ -114,12 +114,33 @@ if __name__ == "__main__":
             features[data_name] =  mut
         elif "reference" in args.training_alias:
             features[data_name] =  ref
+    # Merge PCA-Transformed Bert features and chemical features if applicable
+    if "merge" in args.training_alias:
+        # Load chemical data to merge with existing features
+        merge_data, merge_features, merge_labels = process_data(args.merge_training_path, args.merge_training_start, args.merge_exclude)
+        # Establish feature columns
+        cols = [i for i in input_df["training"].columns[args.training_start:input_df["training"].shape[1]]]
+        for i in merge_data.columns[args.merge_training_start:merge_data.shape[1]]:
+            cols.append(i)
+        # Merge datasets
+        for dataset in input_df.keys():
+            if dataset in args.testing_alias:
+                merge_testing_data, merge_testing_features, merge_testing_labels = process_data(args.merge_testing_path, args.merge_testing_start, args.merge_exclude)
+                merge = input_df[dataset].merge(merge_testing_data, how = "left").dropna().drop_duplicates(subset = ["Gene", "protein_position", "reference_aa", "mutant_aa", "label"])
+            else:
+                merge = input_df[dataset].merge(merge_data, how = "left").dropna().drop_duplicates(subset = ["Gene", "protein_position", "reference_aa", "mutant_aa", "label"])
+            # Update dicts with merged datasets
+            input_df[dataset] = merge
+            features[dataset] = merge[cols]
+            labels[dataset] = merge["label"]
+            metadata[dataset] = merge[[i for i in input_df[dataset] if i not in cols]]
+            del merge
 
     # Define prefix for all files produced by run
-    run_id = args.results_folder + "/" + "{write_type}" + args.lang_model_type + "_" + args.pca_key + "_" + args.model_name + args.scoring_metric
+    run_id = args.results_folder + "/" + "{write_type}" + args.lang_model_type + "-" + args.pca_key + "-" + args.model_name + "-" + args.scoring_metric
 
     # Check if optuna-trained model already exists
-    model_path = run_id.format(write_type=args.training_alias + "_") + '_model.joblib'
+    model_path = run_id.format(write_type=args.training_alias) + '_model.joblib'
     if exists(model_path):
         # Load model
         print("Loading model at: " + model_path)
@@ -128,7 +149,7 @@ if __name__ == "__main__":
         # Optimize hyperparameters with optuna
         print("Running optuna optimization.")
         optuna_run = optimize_hyperparams(2, args.scoring_metric, args.n, args.model_name)
-        plot_optuna_results(optuna_run, run_id.format(write_type="optuna_" + args.training_alias + "_"))
+        plot_optuna_results(optuna_run, run_id.format(write_type="optuna-" + args.training_alias + "-"))
 
         # train final model using optuna's best hyperparameters
         final_classifier = train_model(
@@ -147,7 +168,7 @@ if __name__ == "__main__":
                                       features[data_name],
                                       labels[data_name],
                                       metadata[data_name],
-                                      run_id.format(write_type=data_name + "_" + args.training_alias + "_")
+                                      run_id.format(write_type=data_name + "-" + args.training_alias + "-")
                                      )
 
     # generate performance plots

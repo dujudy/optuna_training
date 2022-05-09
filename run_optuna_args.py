@@ -33,6 +33,12 @@ def parse_run_optuna_args():
     parser.add_argument("--testing_alias", type=str, help="Path to testing data.")
     parser.add_argument("--testing_start", type=int, help="Index of column containing first feature.")
 
+    parser.add_argument("--merge_training_path", type=str, help="Path to merging data.")
+    parser.add_argument("--merge_training_start", type=int, help="Index of column containing first feature.") 
+    parser.add_argument("--merge_testing_path", type=str, help="Path to merging data.")
+    parser.add_argument("--merge_testing_start", type=int, help="Index of column containing first feature.")
+    parser.add_argument("--merge_exclude", type=list, help="Genes to exclude.", default = [])
+
     parser.add_argument("--feature_type", type=str, default= "mut",
                         help="Mapping of aa representation between mutant and reference.")
     parser.add_argument("--lang_model_type", type=str, default = "lang_model_type", #choices = ["UniRep", "Rostlab_Bert", "other"],

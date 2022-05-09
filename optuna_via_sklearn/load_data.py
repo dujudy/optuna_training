@@ -25,7 +25,7 @@ def process_data(path, features_start, exclude):
     input_data = input_data[input_data["reference_aa"] != input_data["mutant_aa"]].reset_index(drop = True)
 
     # Binarize objective label column
-    input_data['label'] = input_data["label"].replace("positives", 1).replace("negatives", 0)\
+    input_data['label'] = input_data["label"].replace("positives", 1).replace("negatives", 0)
 
     # Drop Duplicate columns
     input_data = input_data.drop_duplicates().reset_index(drop = True)
