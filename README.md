@@ -6,7 +6,7 @@ used.
 
 Datasets (i.e. the crossvalidation, training, and testing set(s)) are user-specified according to the python class specified in ```config_function.py```.
 
-Typical usage examples:
+# Typical usage examples:
 ```
     python3 run_optuna_training_testing.py --lang_model_type Rostlab_Bert
     python3 run_optuna_training_testing.py --model_name SVC --scoring_metric auROC --lang_model_type Rostlab_Bert
