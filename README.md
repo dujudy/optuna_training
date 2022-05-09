@@ -1,7 +1,7 @@
 # Optuna hyperparamater tunning, model training, and testing.
 
 Implements optuna optimization algorithms using sklearn ML algorithms (currently,
-GradientBoostingClassifier, SVC, Neural Net, and ElasticNet.) Accuracy, auROC, or auPRC of prediction on cross-validation datasets can be
+GradientBoostingClassifier, SVC, Neural Net, and ElasticNet.) Accuracy, auROC, or auPRC of predictions on cross-validation datasets can be
 used as the optimization objective.
 
 Datasets (i.e. the crossvalidation, training, and testing set(s)) are user-specified according to the python class specified in ```config_function.py```.
